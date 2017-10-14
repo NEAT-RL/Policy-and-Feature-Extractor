@@ -2,7 +2,6 @@ import argparse
 import datetime
 import os.path as osp
 import uuid
-
 import dateutil.tz
 
 import rllab.misc.logger as logger
@@ -30,8 +29,7 @@ if __name__ == '__main__':
     timestamp = now.strftime('%Y_%m_%d_%H_%M_%S_%f_%Z')
 
     default_exp_name = 'mountaincar/power_po_gradient/experiment_%s_%s' % (timestamp, rand_id)
-    LOG_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..')) + "/data"
-    default_log_dir = LOG_DIR
+    default_log_dir = osp.abspath(osp.join(osp.dirname(__file__), '..')) + "/data"
     log_dir = osp.join(default_log_dir, default_exp_name)
     tabular_log_file = osp.join(log_dir, "progress.csv")
     logger.add_tabular_output(tabular_log_file)
@@ -58,4 +56,4 @@ if __name__ == '__main__':
     )
     algo.train()
 
-    policy.save_policy(algo.average_return())
+    policy.save_policy('mountaincar_{0}'.format(algo.average_return()))

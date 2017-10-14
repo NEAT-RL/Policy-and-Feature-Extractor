@@ -20,7 +20,7 @@
 # Check we have somewhere to work now and if we don't, exit nicely.
 #
 LEARNING_RATE=0.001
-DIRECTORY="EM_ALGORITHMS/policy-extractor/mountaincar/0.001"
+DIRECTORY="EM_ALGORITHMS/policy-extractor/mountaincarlong/0.001"
 
 if [ -d /local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID ]; then
         cd /local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID
@@ -109,7 +109,7 @@ cd rllab-policy-extractor/power_po_gradient
 # Run algorithm
 #
 echo ==RUNNING ALGORITHM==
-python power_gradient_mountaincar_discrete.py --learning_rate
+python power_gradient_mountaincarlong_discrete.py --learning_rate
 wait
 
 #

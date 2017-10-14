@@ -13,7 +13,7 @@ class POWERGradient(BatchPolopt):
     The POWER policy gradient based algorithm (use calculated policy gradient for direct policy search).
     """
 
-    numSampledPaths = 40
+    numSampledPaths = 10
 
     def __init__(
             self,
