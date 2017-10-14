@@ -1,6 +1,6 @@
 import lasagne.layers as L
 import lasagne.nonlinearities as NL
-
+import lasagne.init as LI
 from rllab.core.lasagne_powered import LasagnePowered
 from rllab.core.network import MLP
 from rllab.core.serializable import Serializable
@@ -43,7 +43,7 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
             neat_network = MLP(
                 input_shape=(env_spec.observation_space.flat_dim * num_seq_inputs,),
                 output_dim=neat_output_dim,
-                hidden_sizes=(4,),
+                hidden_sizes=(12, 12),
                 hidden_nonlinearity=hidden_nonlinearity,
                 output_nonlinearity=NL.identity,
             )
@@ -69,7 +69,6 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
         self._dist = Categorical(env_spec.action_space.n)
 
         super(PowerGradientPolicy, self).__init__(env_spec)
-        LasagnePowered.__init__(self, [neat_network.output_layer])
         LasagnePowered.__init__(self, [prob_network.output_layer])
 
     def action_log_prob_sym(self, obs_var, act_var):
@@ -79,14 +78,14 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
         :param act_var: 
         :return: 
         """
-        # phi = L.get_output(self._phi, {self._obs: obs_var})
-        prob = L.get_output(self._l_prob, {self._l_obs: obs_var})
+        phi_var = L.get_output(self._phi, {self._obs: obs_var})
+        prob = L.get_output(self._l_prob, {self._l_obs: phi_var})
         return T.log(T.dot(prob, act_var).mean() + TINY)
 
     @overrides
     def dist_info_sym(self, obs_var):
-        # phi = L.get_output(self._phi, {self._obs: obs_var})
-        return dict(prob=L.get_output(self._l_prob, {self._l_obs: obs_var}))
+        phi_var = L.get_output(self._phi, {self._obs: obs_var})
+        return dict(prob=L.get_output(self._l_prob, {self._l_obs: phi_var}))
 
     @overrides
     def dist_info(self, obs, state_infos=None):
@@ -95,20 +94,17 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
     @overrides
     def get_action(self, observation):
         flat_obs = self.observation_space.flatten(observation)
-        # phi = self._neat_output([flat_obs])[0]
-        prob = self._f_prob([flat_obs])[0]  # does phi need to be flattened
+        phi = self._neat_output([flat_obs])[0]
+        prob = self._f_prob([phi])[0]  # does phi need to be flattened?
         action = self.action_space.weighted_sample(prob)
         return action, dict(prob=prob)
 
     def get_actions(self, observations):
         flat_obs = self.observation_space.flatten_n(observations)
-        # phis = self._neat_output(flat_obs)
-        probs = self._f_prob(flat_obs)
+        phis = self._neat_output(flat_obs)
+        probs = self._f_prob(phis)
         actions = list(map(self.action_space.weighted_sample, probs))
         return actions, dict(prob=probs)
-
-    def get_cumulative_log_probability(self, observations, actions):
-        return np.sum(np.log((self.get_actions(observations)[1]['prob'] * actions).sum(axis=1) + TINY))
 
     @property
     def distribution(self):

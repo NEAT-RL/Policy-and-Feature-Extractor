@@ -3,7 +3,7 @@ import numpy as np
 import gym
 import random
 import pickle
-from rllab.power_po_neat.power_po_gradient.power_gradient_policy import PowerGradientPolicy
+from power_po_gradient.power_gradient_policy import PowerGradientPolicy
 from rllab.envs.gym_env import GymEnv
 from rllab.envs.normalized_env import normalize
 import logging
