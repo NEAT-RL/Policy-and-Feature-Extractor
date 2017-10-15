@@ -99,6 +99,8 @@ echo ==CLONE POLICY EXTRACTOR REPO==
 git clone git@github.com:Harmannz/rllab-policy-extractor.git
 wait
 
+export PYTHONPATH=/local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID/rllab_policy_extractor:$PYTHONPATH
+
 #
 # cd into repo
 #
