@@ -6,7 +6,7 @@
 #
 # I know I have a directory here so I'll use it as my initial working directory
 #
-#$ -wd /vol/grid-solar/sgeusers/singhharm1/EM_ALGORITHMS/power_po_gradient
+#$ -wd /vol/grid-solar/sgeusers/singhharm1/EM_ALGORITHMS/policy-extractor/
 #
 # Mail me at the b(eginning) and e(nd) of the job
 #$ -M Harman.Singh@ecs.vuw.ac.nz
@@ -19,8 +19,8 @@
 #
 # Check we have somewhere to work now and if we don't, exit nicely.
 #
-
-DIRECTORY="EM_ALGORITHMS/power_po_gradient/flappybird"
+LEARNING_RATE=0.001
+DIRECTORY="EM_ALGORITHMS/policy-extractor/mountaincar/0.001"
 
 if [ -d /local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID ]; then
         cd /local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID
@@ -54,8 +54,7 @@ echo ==SGE_O_WORKDIR==
 echo $SGE_O_WORKDIR
 echo ==/LOCAL/TMP==
 ls -ltr /local/tmp/
-echo ==/VOL/GRID-SOLAR==
-ls -l /vol/grid-solar/sgeusers/
+
 #
 # OK, where are we starting from and what's the environment we're in
 #
@@ -78,13 +77,9 @@ ls -la
 #
 echo ==CLONE REPO==
 pwd
-rm -r -f NEAT
+rm -r -f rllab_modified
 git clone git@github.com:Harmannz/rllab_modified.git
-git checkout fb-dev
 wait
-
-echo ==WHATS THERE HAVING CLONED STUFF==
-ls -la
 
 #
 # Run python environment in bash
@@ -99,17 +94,22 @@ echo ==SETUP CONDA ENV==
 conda env list
 source activate rllab
 
+
+echo ==CLONE POLICY EXTRACTOR REPO==
+git clone git@github.com:Harmannz/rllab-policy-extractor.git
+wait
+
 #
 # cd into repo
 #
-echo ==GOING INTO power_po DIRECTORY==
-cd rllab_modified/rllab/power_po_gradient
+echo ==GOING INTO policy extractor DIRECTORY==
+cd rllab-policy-extractor/policy_extractor
 
 #
-# Run alrogithm
+# Run algorithm
 #
 echo ==RUNNING ALGORITHM==
-python power_gradient_flappybird_discrete.py
+python power_gradient_mountaincar_discrete.py --learning_rate=$LEARNING_RATE
 wait
 
 #
@@ -117,9 +117,10 @@ wait
 #  (really should check that directory exists too, but this is just a test)
 #
 echo ==COPY PROGRAM RUN FILES==
-# mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID/$SGE_TASK_I
-mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY
-cp -r ../../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY
+mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
+cp -r ../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
+cp model* /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
+
 
 #
 echo "Ran through OK"

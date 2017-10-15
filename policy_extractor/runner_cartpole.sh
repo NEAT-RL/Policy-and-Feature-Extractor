@@ -6,7 +6,7 @@
 #
 # I know I have a directory here so I'll use it as my initial working directory
 #
-#$ -wd /vol/grid-solar/sgeusers/singhharm1/EM_ALGORITHMS/power_po_gradient
+#$ -wd /vol/grid-solar/sgeusers/singhharm1/EM_ALGORITHMS/policy-extractor/
 #
 # Mail me at the b(eginning) and e(nd) of the job
 #$ -M Harman.Singh@ecs.vuw.ac.nz
@@ -20,7 +20,7 @@
 # Check we have somewhere to work now and if we don't, exit nicely.
 #
 
-DIRECTORY="EM_ALGORITHMS/power_po_gradient/cartpole"
+DIRECTORY="EM_ALGORITHMS/policy-extractor/cartpole"
 
 if [ -d /local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID ]; then
         cd /local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID
@@ -80,7 +80,6 @@ echo ==CLONE REPO==
 pwd
 rm -r -f NEAT
 git clone git@github.com:Harmannz/rllab_modified.git
-git checkout fb-dev
 wait
 
 echo ==WHATS THERE HAVING CLONED STUFF==
@@ -99,11 +98,16 @@ echo ==SETUP CONDA ENV==
 conda env list
 source activate rllab
 
+
+echo ==CLONE POLICY EXTRACTOR REPO==
+git clone git@github.com:Harmannz/rllab-policy-extractor.git
+wait
+
 #
 # cd into repo
 #
-echo ==GOING INTO power_po DIRECTORY==
-cd rllab_modified/rllab/power_po_gradient
+echo ==GOING INTO policy extractor DIRECTORY==
+cd rllab-policy-extractor/policy_extractor
 
 #
 # Run alrogithm

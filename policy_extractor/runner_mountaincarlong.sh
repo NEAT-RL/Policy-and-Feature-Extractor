@@ -103,13 +103,13 @@ wait
 # cd into repo
 #
 echo ==GOING INTO policy extractor DIRECTORY==
-cd rllab-policy-extractor/power_po_gradient
+cd rllab-policy-extractor/policy_extractor
 
 #
 # Run algorithm
 #
 echo ==RUNNING ALGORITHM==
-python power_gradient_mountaincarlong_discrete.py --learning_rate
+python power_gradient_mountaincarlong_discrete.py --learning_rate=$LEARNING_RATE
 wait
 
 #

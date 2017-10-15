@@ -19,8 +19,8 @@
 #
 # Check we have somewhere to work now and if we don't, exit nicely.
 #
-LEARNING_RATE=0.001
-DIRECTORY="EM_ALGORITHMS/policy-extractor/mountaincar/0.001"
+LEARNING_RATE=0.01
+DIRECTORY="EM_ALGORITHMS/policy-extractor/flappybird/0.01"
 
 if [ -d /local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID ]; then
         cd /local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID
@@ -54,7 +54,8 @@ echo ==SGE_O_WORKDIR==
 echo $SGE_O_WORKDIR
 echo ==/LOCAL/TMP==
 ls -ltr /local/tmp/
-
+echo ==/VOL/GRID-SOLAR==
+ls -l /vol/grid-solar/sgeusers/
 #
 # OK, where are we starting from and what's the environment we're in
 #
@@ -77,9 +78,13 @@ ls -la
 #
 echo ==CLONE REPO==
 pwd
-rm -r -f rllab_modified
+rm -r -f NEAT
 git clone git@github.com:Harmannz/rllab_modified.git
+git checkout fb-dev
 wait
+
+echo ==WHATS THERE HAVING CLONED STUFF==
+ls -la
 
 #
 # Run python environment in bash
@@ -103,13 +108,13 @@ wait
 # cd into repo
 #
 echo ==GOING INTO policy extractor DIRECTORY==
-cd rllab-policy-extractor/power_po_gradient
+cd rllab-policy-extractor/policy_extractor
 
 #
-# Run algorithm
+# Run alrogithm
 #
 echo ==RUNNING ALGORITHM==
-python power_gradient_mountaincar_discrete.py --learning_rate
+python power_gradient_flappybird_discrete.py --learning_rate=$LEARNING_RATE
 wait
 
 #
@@ -117,10 +122,9 @@ wait
 #  (really should check that directory exists too, but this is just a test)
 #
 echo ==COPY PROGRAM RUN FILES==
-mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
-cp -r ../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
-cp model* /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
-
+# mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID/$SGE_TASK_I
+mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY
+cp -r ../../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY
 
 #
 echo "Ran through OK"

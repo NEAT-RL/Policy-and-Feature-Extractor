@@ -8,8 +8,9 @@ import rllab.misc.logger as logger
 from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
 from rllab.envs.gym_env import GymEnv
 from rllab.envs.normalized_env import normalize
-from power_po_gradient.power_gradient import POWERGradient
-from power_po_gradient.power_gradient_policy import PowerGradientPolicy
+from policy_extractor.power_gradient import POWERGradient
+from policy_extractor.power_gradient_policy import PowerGradientPolicy
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
@@ -48,7 +49,7 @@ if __name__ == '__main__':
         env=env,
         policy=policy,
         baseline=baseline,
-        batch_size=4000,
+        batch_size=80000,
         max_path_length=200,
         n_itr=3000,
         discount=0.99,
