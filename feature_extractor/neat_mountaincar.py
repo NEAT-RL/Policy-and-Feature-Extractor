@@ -6,6 +6,7 @@ from rllab.envs.normalized_env import normalize
 from feature_extractor.power_gradient_policy import PowerGradientPolicy
 import datetime
 import dateutil.tz
+import numpy as np
 import os.path as osp
 
 PROJECT_PATH = osp.abspath(osp.dirname(__file__))
@@ -30,19 +31,24 @@ policy = PowerGradientPolicy(
 policy.load_policy('policy_parameters/model-mountaincar.npz')
 
 def do_rollout(agent, render=False):
-    total_reward = 0
-    ob = env.reset()
-    t = 0
-    for t in range(num_of_steps):
-        outputs = agent.activate(ob)
-        action, prob = policy.get_action(outputs)
-        (ob, reward, done, _info) = env.step(action)
-        total_reward += reward
-        if render and t % 3 == 0:
-            env.render()
-        if done:
-            break
-    return total_reward, t
+    rewards = []
+    for i in range(10):
+        ob = env.reset()
+        t = 0
+        total_rewards = 0
+        for t in range(num_of_steps):
+            outputs = agent.activate(ob)
+            action, prob = policy.get_action(outputs)
+            (ob, reward, done, _info) = env.step(action)
+            total_rewards += reward
+            if render and t % 3 == 0:
+                env.render()
+            if done:
+                break
+
+        rewards.append(total_rewards)
+
+    return np.mean(rewards)
 
 
 def eval_genome(genome, config):
@@ -62,12 +68,10 @@ def eval_genome(genome, config):
 
 
 def evaluation(genomes, config):
-    global generation, steps_to_train
+    global generation
     for genome_id, genome in genomes:
         net = neat.nn.FeedForwardNetwork.create(genome, config)
-        genome.fitness, steps = do_rollout(net, is_render)
-        steps_to_train += steps
-
+        genome.fitness = do_rollout(net, is_render)
     # sort the genomes by fitness
     gid, best_genome = max(genomes, key=lambda x: x[1].fitness)
 
@@ -99,5 +103,4 @@ def run(config):
 
 if __name__ == '__main__':
     generation = 0
-    steps_to_train = 0
     run(config=config_path)

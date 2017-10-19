@@ -35,19 +35,24 @@ policy = PowerGradientPolicy(
 policy.load_policy('policy_parameters/model-asteroids.npz')
 
 def do_rollout(agent, render=False):
-    total_reward = 0
-    ob = env.reset()
-    t = 0
-    for t in range(num_of_steps):
-        outputs = agent.activate(ob)
-        action, prob = policy.get_action(outputs)
-        (ob, reward, done, _info) = env.step(action)
-        total_reward += reward
-        if render and t % 3 == 0:
-            env.render()
-        if done:
-            break
-    return total_reward, t
+    rewards = []
+    for i in range(10):
+        ob = env.reset()
+        t = 0
+        total_rewards = 0
+        for t in range(num_of_steps):
+            outputs = agent.activate(ob)
+            action, prob = policy.get_action(outputs)
+            (ob, reward, done, _info) = env.step(action)
+            total_rewards += reward
+            if render and t % 3 == 0:
+                env.render()
+            if done:
+                break
+
+        rewards.append(total_rewards)
+
+    return np.mean(rewards)
 
 
 def eval_genome(genome, config):
@@ -67,23 +72,21 @@ def eval_genome(genome, config):
 
 
 def evaluation(genomes, config):
-    global generation, steps_to_train
+    global generation
     nets = []
     for gid, g in genomes:
         nets.append((g, neat.nn.FeedForwardNetwork.create(g, config)))
 
     if pool is None:
         for genome, net in nets:
-            genome.fitness, steps = do_rollout(net, is_render)
-            steps_to_train += steps
+            genome.fitness = do_rollout(net, is_render)
     else:
         jobs = []
         for genome, net in nets:
             jobs.append(pool.apply_async(do_rollout, (net,)))
 
         for job, (genome_id, genome) in zip(jobs, genomes):
-            genome.fitness, steps = job.get(timeout=None)
-            steps_to_train += steps
+            genome.fitness = job.get(timeout=None)
 
     # sort the genomes by fitness
     gid, best_genome = max(genomes, key=lambda x: x[1].fitness)

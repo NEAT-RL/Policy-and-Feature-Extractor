@@ -18,7 +18,7 @@ import pickle
 import datetime
 import dateutil.tz
 import neat
-
+import numpy as np
 #hyper paramerters
 num_of_steps = 100000
 num_of_episodes = 1
@@ -56,20 +56,24 @@ def evaluation(genomes, config):
 
 
 def do_rollout(agent, render=False):
-    total_reward = 0
-    ob = env.reset()
-    t = 0
-    for t in range(num_of_steps):
-        outputs = agent.activate(ob)
-        action, prob = policy.get_action(outputs)
-        (ob, reward, done, _info) = env.step(action)
-        total_reward += reward
-        if render:
-            print(env.engine.dumpstate())
-        if done: break
+    rewards = []
+    for i in range(10):
+        ob = env.reset()
+        t = 0
+        total_rewards = 0
+        for t in range(num_of_steps):
+            outputs = agent.activate(ob)
+            action, prob = policy.get_action(outputs)
+            (ob, reward, done, _info) = env.step(action)
+            total_rewards += reward
+            if render and t % 3 == 0:
+                env.render()
+            if done:
+                break
 
-    return total_reward, t
+        rewards.append(total_rewards)
 
+    return np.mean(rewards)
 
 def run(config):
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,

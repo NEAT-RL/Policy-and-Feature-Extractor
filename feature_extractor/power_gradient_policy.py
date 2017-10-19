@@ -24,7 +24,6 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
             hidden_nonlinearity=NL.tanh,
             num_seq_inputs=1,
             neat_output_dim=(20, ),
-            neat_network=None,
             prob_network=None,
     ):
         """
@@ -47,7 +46,6 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
                 hidden_nonlinearity=hidden_nonlinearity,
                 output_nonlinearity=NL.softmax,
             )
-        self.neat_network = neat_network
         self.neat_output_dim = neat_output_dim
         self.prob_network = prob_network
         self._l_prob = prob_network.output_layer
@@ -61,20 +59,17 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
 
     @overrides
     def dist_info(self, obs, state_infos=None):
-        neat_output_var = self.get_neat_output(obs)
-        return dict(prob=self._f_prob(neat_output_var))
+        return dict(prob=self._f_prob(obs))
 
     @overrides
     def get_action(self, observation):
-        neat_output = self.neat_network.activate(observation)
-        flat_obs = self.observation_space.flatten(neat_output)
+        flat_obs = self.observation_space.flatten(observation)
         prob = self._f_prob([flat_obs])[0]
         action = self.action_space.weighted_sample(prob)
         return action, dict(prob=prob)
 
     def get_actions(self, observations):
-        neat_output_vars = self.get_neat_output(observations)
-        flat_obs = self.observation_space.flatten_n(neat_output_vars)
+        flat_obs = self.observation_space.flatten_n(observations)
         probs = self._f_prob(flat_obs)
         actions = list(map(self.action_space.weighted_sample, probs))
         return actions, dict(prob=probs)
@@ -82,17 +77,6 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
     @property
     def distribution(self):
         return self._dist
-
-    def get_neat_output(self, obs_var):
-        if len(obs_var[0]) == self.input_shape[0]:
-            return obs_var
-        else:
-            neat_output_var = []
-            for obs in obs_var:
-                neat_output_var.append(self.neat_network.activate(obs))
-
-            neat_output_var = np.array(neat_output_var)
-            return neat_output_var
 
     def get_output_layer(self):
         layers = self.prob_network.layers
