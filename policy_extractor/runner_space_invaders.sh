@@ -104,7 +104,7 @@ echo ==CLONE POLICY EXTRACTOR REPO==
 git clone git@github.com:Harmannz/rllab-policy-extractor.git
 wait
 
-export PYTHONPATH=/local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID/rllab_policy_extractor:$PYTHONPATH
+export PYTHONPATH=/local/tmp/singhharm1/$JOB_ID.$SGE_TASK_ID/rllab-policy-extractor:$PYTHONPATH
 
 #
 # cd into repo
@@ -125,8 +125,8 @@ wait
 #
 echo ==COPY PROGRAM RUN FILES==
 # mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID/$SGE_TASK_I
-mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY
-cp -r ../../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY
+mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
+cp -r ../../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
 
 #
 echo "Ran through OK"
