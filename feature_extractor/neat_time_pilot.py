@@ -25,7 +25,7 @@ env = normalize(normalize(GymEnv("TimePilot-ram-v0")))
 
 policy = PowerGradientPolicy(
         env_spec=env.spec,
-        neat_output_dim=64,
+        neat_output_dim=(64, ),
         # The neural network policy should have two hidden layers, each with 32 hidden units.
         hidden_sizes=(64, 32)
 )

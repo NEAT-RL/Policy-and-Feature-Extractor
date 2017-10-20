@@ -80,7 +80,6 @@ echo ==CLONE REPO==
 pwd
 rm -r -f NEAT
 git clone git@github.com:Harmannz/rllab_modified.git
-git checkout fb-dev
 wait
 
 echo ==WHATS THERE HAVING CLONED STUFF==
@@ -118,8 +117,8 @@ wait
 #
 echo ==COPY PROGRAM RUN FILES==
 # mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID/$SGE_TASK_I
-mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY
-cp -r ../../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY
+mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
+cp -r ../../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
 
 #
 echo "Ran through OK"

@@ -80,7 +80,6 @@ echo ==CLONE REPO==
 pwd
 rm -r -f NEAT
 git clone git@github.com:Harmannz/rllab_modified.git
-git checkout fb-dev
 wait
 
 echo ==WHATS THERE HAVING CLONED STUFF==
