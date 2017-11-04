@@ -32,7 +32,7 @@ if __name__ == '__main__':
     default_exp_name = 'space-invaders/power_po_gradient/experiment_%s_%s' % (timestamp, rand_id)
     default_log_dir = osp.abspath(osp.join(osp.dirname(__file__), '..')) + "/data"
     log_dir = osp.join(default_log_dir, default_exp_name)
-    env = normalize(normalize(GymEnv("SpaceInvaders-ram-v0")))
+    env = normalize(normalize(GymEnv("SpaceInvaders-ramNoFrameskip-v0")))
 
     tabular_log_file = osp.join(log_dir, "progress.csv")
     logger.add_tabular_output(tabular_log_file)

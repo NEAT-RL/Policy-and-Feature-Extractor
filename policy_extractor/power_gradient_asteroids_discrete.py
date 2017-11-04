@@ -35,7 +35,7 @@ if __name__ == '__main__':
     tabular_log_file = osp.join(log_dir, "progress.csv")
     logger.add_tabular_output(tabular_log_file)
 
-    env = normalize(normalize(GymEnv("Asteroids-ram-v0")))
+    env = normalize(normalize(GymEnv("Asteroids-ramNoFrameskip-v0")))
 
     policy = PowerGradientPolicy(
         env_spec=env.spec,
