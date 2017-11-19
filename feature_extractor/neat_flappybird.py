@@ -35,7 +35,7 @@ policy = PowerGradientPolicy(
     # The neural network policy should have two hidden layers, each with 32 hidden units.
     hidden_sizes=(32, 32)
 )
-
+# Load policy parameters = weights + bias of pretrained network
 policy.load_policy('policy_parameters/model-flappybird.npz')
 
 def evaluation(genomes, config):

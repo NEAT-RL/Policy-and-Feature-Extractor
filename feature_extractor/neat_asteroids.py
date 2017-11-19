@@ -22,7 +22,7 @@ is_render = False
 
 # config file
 config_path = 'config/asteroids'
-env = normalize(normalize(GymEnv("Asteroids-ram-v0")))
+env = normalize(normalize(GymEnv("Asteroids-ramNoFrameskip-v0")))
 
 
 policy = PowerGradientPolicy(
@@ -31,7 +31,7 @@ policy = PowerGradientPolicy(
         # The neural network policy should have two hidden layers, each with 32 hidden units.
         hidden_sizes=(64, 32)
 )
-
+# Load policy parameters = weights and bias of pretrained network
 policy.load_policy('policy_parameters/model-asteroids.npz')
 
 def do_rollout(agent, render=False):

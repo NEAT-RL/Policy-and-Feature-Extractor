@@ -21,7 +21,7 @@ timestamp = now.strftime('%Y_%m_%d_%H_%M_%S_%f_%Z')
 is_render = False
 
 config_path = 'config/time_pilot'
-env = normalize(normalize(GymEnv("TimePilot-ram-v0")))
+env = normalize(normalize(GymEnv("TimePilot-ramNoFrameskip-v0")))
 
 policy = PowerGradientPolicy(
         env_spec=env.spec,
@@ -29,7 +29,7 @@ policy = PowerGradientPolicy(
         # The neural network policy should have two hidden layers, each with 32 hidden units.
         hidden_sizes=(64, 32)
 )
-
+# Load policy parameters = weights and bias of pretrained network
 policy.load_policy('policy_parameters/model-time_pilot.npz')
 
 

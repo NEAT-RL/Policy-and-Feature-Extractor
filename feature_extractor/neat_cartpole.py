@@ -30,7 +30,7 @@ policy = PowerGradientPolicy(
     # The neural network policy should have two hidden layers, each with 32 hidden units.
     hidden_sizes=(4, 4)
 )
-
+# Load policy parameters = weights and bias of pretrained network
 policy.load_policy('policy_parameters/model-cartpole.npz')
 
 

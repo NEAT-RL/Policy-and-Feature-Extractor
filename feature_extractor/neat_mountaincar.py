@@ -18,7 +18,7 @@ now = datetime.datetime.now(dateutil.tz.tzlocal())
 timestamp = now.strftime('%Y_%m_%d_%H_%M_%S_%f_%Z')
 
 is_render = False
-#Cart Pole
+# Mountain Car
 config_path = 'config/mountaincar'
 env = normalize(normalize(GymEnv("MountainCar-v0")))
 
@@ -27,7 +27,7 @@ policy = PowerGradientPolicy(
         # The neural network policy should have two hidden layers, each with 32 hidden units.
         hidden_sizes=(32, 32)
 )
-
+# Load policy parameters = weights and bias of pretrained network
 policy.load_policy('policy_parameters/model-mountaincar.npz')
 
 def do_rollout(agent, render=False):
