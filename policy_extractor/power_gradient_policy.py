@@ -38,7 +38,7 @@ class PowerGradientPolicy(StochasticPolicy, LasagnePowered):
         Serializable.quick_init(self, locals())
 
         assert isinstance(env_spec.action_space, Discrete)
-
+        # create random NEAT MLP
         if neat_network is None:
             neat_network = MLP(
                 input_shape=(env_spec.observation_space.flat_dim * num_seq_inputs,),

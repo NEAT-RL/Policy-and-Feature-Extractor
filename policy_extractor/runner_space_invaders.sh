@@ -123,10 +123,9 @@ wait
 #  (really should check that directory exists too, but this is just a test)
 #
 echo ==COPY PROGRAM RUN FILES==
-# mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID/$SGE_TASK_I
 mkdir -p /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
 cp -r ../../data /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
-
+cp space_invaders_* /vol/grid-solar/sgeusers/singhharm1/$DIRECTORY/$JOB_ID.$SGE_TASK_ID
 #
 echo "Ran through OK"
 
