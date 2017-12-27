@@ -24,6 +24,9 @@ The hiden layers can be set using the _hidden_sizes_ parameter. The output of th
 
 Feature Extractor is used for extracting useful NEAT Network parameters. The idea is to use the _temporary_ policy parameters from the Policy Extractor method to evolve NEAT networks and save the NEAT parameters.
 
+> N.B. Feature Extraction on complex Atari games can take a very long time. If you are using grid-solar, your request may be terminated by overusing the system resources.   
+> It is recommended you run the Feature Extractor on a multicore system with many threads. I found that running feature extractor for 40-60 generation is enough.
+
 ### Policy Parameters
 A `PowerGradientPolicy` policy object is used for creating a policy. The policy's _neat_output_dim_ paramter needs to be defined. The _hidden_sizes_ parameter also needs to be defined. An example for the asteroids game is shown below:
 ```Python
